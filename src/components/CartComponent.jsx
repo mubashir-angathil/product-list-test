@@ -73,7 +73,7 @@ const CartComponent = ({ allTotal, cartProducts, setCartProducts }) => {
             return (
               <tr
                 key={product.product_id}
-                className="bg-white border-b  hover:bg-gray-50 dark:hover:bg-gray-600"
+                className="bg-white border-b  hover:bg-gray-50"
               >
                 <td className="p-4">
                   <img
@@ -167,9 +167,7 @@ const CartComponent = ({ allTotal, cartProducts, setCartProducts }) => {
       <hr />
       <div className="flex justify-between items-center px-6">
         <span className="text-neutral-500 text-lg font-normal">Cart Total</span>
-        <h1 className="p-2 font-bold text-lg text-lime-700">
-          Rs.{allTotal}
-        </h1>
+        <h1 className="p-2 font-bold text-lg text-lime-700">Rs.{allTotal}</h1>
       </div>
     </div>
   );
