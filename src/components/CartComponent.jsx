@@ -1,49 +1,50 @@
 import React from "react";
 
-const CartComponent = ({ products, cartProducts, setCartProducts }) => {
-  const [total, setTotal] = React.useState(0);
+const CartComponent = ({ allTotal, cartProducts, setCartProducts }) => {
+  // handle quantity updates
   const handleUpdateQuantity = ({ product, action = "inc" }) => {
-    setCartProducts((preVal) => {
-      let newProduct;
-      const isProductExist = products.find(
-        (pr) => pr.product_id === product.product_id
+    setCartProducts((cartItems) => {
+      // Find cart item
+      const item = cartItems.find(
+        (item) => item.product_id === product.product_id
       );
 
-      if (isProductExist) {
-        const currentQuantity =
-          action === "inc"
-            ? product.quantity + 1
-            : product.quantity - 1 > 1
-            ? product.quantity - 1
-            : 0;
-
-        newProduct = {
-          ...isProductExist,
-          quantity: currentQuantity,
-        };
-        const updatedProduct = preVal.map((item) => {
-          if (item.product_id === newProduct.product_id) return newProduct;
-          return item;
-        });
-        return updatedProduct;
-      } else {
-        newProduct = {
-          ...product,
-          quantity: 1,
-        };
-        return [...preVal, newProduct];
+      // if quantity <= 0 then remove product from cart
+      if (action === "dec") {
+        const currentQuantity = item.quantity - 1;
+        if (currentQuantity <= 0) {
+          removeProductFormCart(product);
+        }
       }
+
+      // create newItem
+      const newItem = {
+        ...item,
+        quantity: action === "inc" ? item.quantity + 1 : item.quantity - 1,
+        totalPrice:
+          action === "inc"
+            ? (item.quantity + 1) * item.price
+            : item.quantity - 1 >= 0
+            ? (item.quantity - 1) * item.price
+            : 0,
+      };
+      const updatedProducts = cartItems.map((val) =>
+        val.product_id === newItem.product_id ? newItem : val
+      );
+      return updatedProducts;
     });
-    setTotal(calcTotal());
   };
 
-  const calcTotal = () => {
-    return cartProducts.reduce((total, current) => {
-      const allTotal = total + current.price * current.quantity;
-      setTotal(allTotal)
-      return allTotal;
-    }, 1);
+  //Remove product form cart
+  const removeProductFormCart = (product) => {
+    setCartProducts((cartItems) => {
+      const updatedItems = cartItems.filter(
+        (pr) => pr.product_id !== product.product_id
+      );
+      return updatedItems;
+    });
   };
+
   return (
     <div>
       <table className="w-full h-full text-sm text-left text-gray-900">
@@ -69,7 +70,6 @@ const CartComponent = ({ products, cartProducts, setCartProducts }) => {
         </thead>
         <tbody>
           {cartProducts.map((product) => {
-            console.log(product);
             return (
               <tr
                 key={product.product_id}
@@ -90,9 +90,9 @@ const CartComponent = ({ products, cartProducts, setCartProducts }) => {
                     <button
                       className="inline-flex items-center justify-center p-1 me-3 text-sm font-medium h-6 w-6 text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                       type="button"
-                      onClick={() =>
-                        handleUpdateQuantity({ product, action: "dec" })
-                      }
+                      onClick={() => {
+                        handleUpdateQuantity({ product, action: "dec" });
+                      }}
                     >
                       <span className="sr-only">Quantity button</span>
                       <svg
@@ -104,9 +104,9 @@ const CartComponent = ({ products, cartProducts, setCartProducts }) => {
                       >
                         <path
                           stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
                           d="M1 1h16"
                         />
                       </svg>
@@ -118,15 +118,16 @@ const CartComponent = ({ products, cartProducts, setCartProducts }) => {
                         className="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="1"
                         value={product.quantity}
+                        readOnly
                         required
                       />
                     </div>
                     <button
                       className="inline-flex items-center justify-center h-6 w-6 p-1 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                       type="button"
-                      onClick={() =>
-                        handleUpdateQuantity({ product, action: "inc" })
-                      }
+                      onClick={() => {
+                        handleUpdateQuantity({ product, action: "inc" });
+                      }}
                     >
                       <span className="sr-only">Quantity button</span>
                       <svg
@@ -138,9 +139,9 @@ const CartComponent = ({ products, cartProducts, setCartProducts }) => {
                       >
                         <path
                           stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
                           d="M9 1v16M1 9h16"
                         />
                       </svg>
@@ -148,12 +149,13 @@ const CartComponent = ({ products, cartProducts, setCartProducts }) => {
                   </div>
                 </td>
                 <td className="px-6 py-4 font-semibold text-gray-900">
-                  {product.price !== 0
-                    ? product.price * product.quantity
-                    : product.price}
+                  {product.totalPrice}
                 </td>
                 <td className="px-6 py-4">
-                  <button className="font-medium rose-blue-500 hover:underline">
+                  <button
+                    className="font-medium text-rose-500 hover:underline"
+                    onClick={() => removeProductFormCart(product)}
+                  >
                     Delete
                   </button>
                 </td>
@@ -162,7 +164,7 @@ const CartComponent = ({ products, cartProducts, setCartProducts }) => {
           })}
         </tbody>
       </table>
-      <h1>{total}</h1>
+      <h1 className="p-5 text-3xl text-lime-500">{allTotal}</h1>
     </div>
   );
 };

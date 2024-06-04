@@ -94,9 +94,21 @@ const allProducts = [
 function App() {
   const [products] = React.useState(allProducts);
   const [cartProducts, setCartProducts] = React.useState([]);
+  const [total, setTotal] = React.useState(0);
+
+  // handle calculation of cart total
+  React.useEffect(() => {
+    const calcTotal = () => {
+      const allTotal = cartProducts.reduce((acc, current) => {
+        return acc + current.totalPrice;
+      }, 0);
+      setTotal(allTotal);
+    };
+    calcTotal();
+  }, [cartProducts]);
 
   return (
-    <div className="flex min-h-[100vh]">
+    <div className="flex min-h-[100vh] gap-5 p-5">
       <div className="w-[60%]">
         <ProductListComponent
           products={products}
@@ -105,7 +117,7 @@ function App() {
       </div>
       <div className="w-[40%]">
         <CartComponent
-          products={products}
+          allTotal={total}
           cartProducts={cartProducts}
           setCartProducts={setCartProducts}
         />
