@@ -108,19 +108,22 @@ function App() {
   }, [cartProducts]);
 
   return (
-    <div className="flex min-h-[100vh] gap-5 p-5">
-      <div className="w-[60%]">
-        <ProductListComponent
-          products={products}
-          setCartProducts={setCartProducts}
-        />
-      </div>
-      <div className="w-[40%]">
-        <CartComponent
-          allTotal={total}
-          cartProducts={cartProducts}
-          setCartProducts={setCartProducts}
-        />
+    <div className="max-w-screen-xl mx-auto py-20 px-6">
+      <h1 className="text-3xl font-bold uppercase px-6 lg:px-0 reveal active">Product List</h1>
+      <div className="flex lg:flex-row flex-col gap-5 py-5">
+        <div className="lg:w-[60%] w-full">
+          <ProductListComponent
+            products={products}
+            setCartProducts={setCartProducts}
+          />
+        </div>
+        <div className="lg:w-[40%] w-full">
+          <CartComponent
+            allTotal={total}
+            cartProducts={cartProducts}
+            setCartProducts={setCartProducts}
+          />
+        </div>
       </div>
     </div>
   );

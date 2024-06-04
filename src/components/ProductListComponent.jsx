@@ -29,9 +29,9 @@ const ProductListComponent = ({ products, setCartProducts }) => {
   };
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-6">
-      <table className="w-full h-full text-sm text-left text-gray-900">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+    <div className="relative overflow-hidden hover:overflow-auto  shadow-md sm:rounded-lg h-[540px] rounded-xl reveal active">
+      <table className=" overflow-y-auto w-full text-sm text-left text-gray-900">
+        <thead className="text-xs text-neutral-50 uppercase bg-gray-800">
           <tr>
             <th scope="col" className="px-16 py-3">
               Image
@@ -51,14 +51,14 @@ const ProductListComponent = ({ products, setCartProducts }) => {
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody >
           {products.map((product) => {
             return (
               <tr
                 key={product.product_id}
-                className="bg-white border-b  hover:bg-gray-50 dark:hover:bg-gray-600"
+                className="bg-white border-b  hover:bg-gray-50 rounded-xl"
               >
-                <td className="p-4">
+                <td className="p-1">
                   <img
                     src={product.image}
                     className="w-16 md:w-32 max-w-full max-h-full"
@@ -71,10 +71,10 @@ const ProductListComponent = ({ products, setCartProducts }) => {
                 <td className="px-6 py-4 font-semibold text-gray-900">
                   {product.description}
                 </td>
-                <td className="px-6 py-4 font-semibold text-gray-900">
-                  {product.price}
+                <td className="px-6 py-4 font-bold text-green-900">
+                  Rs.{product.price}
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-1 py-4">
                   <button
                     className="font-medium text-blue-500 hover:underline"
                     onClick={() => {

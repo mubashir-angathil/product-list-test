@@ -46,9 +46,9 @@ const CartComponent = ({ allTotal, cartProducts, setCartProducts }) => {
   };
 
   return (
-    <div>
-      <table className="w-full h-full text-sm text-left text-gray-900">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+    <div className="shadow-xl rounded-xl overflow-hidden hover:overflow-auto reveal active">
+      <table className="w-full h-full text-sm text-left text-gray-900 rounded-xl">
+        <thead className=" text-neutral-50 uppercase bg-gray-800  rounded-xl">
           <tr>
             <th scope="col" className="px-16 py-3">
               Image
@@ -164,7 +164,13 @@ const CartComponent = ({ allTotal, cartProducts, setCartProducts }) => {
           })}
         </tbody>
       </table>
-      <h1 className="p-5 text-3xl text-lime-500">{allTotal}</h1>
+      <hr />
+      <div className="flex justify-between items-center px-6">
+        <span className="text-neutral-500 text-lg font-normal">Cart Total</span>
+        <h1 className="p-2 font-bold text-lg text-lime-700">
+          Rs.{allTotal}
+        </h1>
+      </div>
     </div>
   );
 };
